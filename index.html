@@ -6,36 +6,104 @@
     <title>Joyland Navigator - Fixed Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #1a73e8; --bg: #f8f9fa; --card: #ffffff; --text: #202124; --info: #e8f0fe; --success: #34a853; --warning: #fff9c4; --risk: #fff3e0; --fb: #1877F2; }
-        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 400px; background: var(--card); padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; flex-direction: column; min-height: 90vh; }
-        
-        h2 { text-align: center; color: var(--primary); margin-bottom: 20px; font-size: 1.4em; }
-        .step-indicator { display: flex; justify-content: space-between; margin-bottom: 20px; gap: 5px; }
-        .step { flex: 1; height: 6px; background: #e0e0e0; border-radius: 3px; }
-        .step.active { background: var(--primary); }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .choice-btn { padding: 14px; border: 2px solid #dadce0; border-radius: 12px; background: white; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .choice-btn:active { background: var(--info); transform: scale(0.98); }
+:root {
+    --primary: linear-gradient(135deg, #1a73e8, #6a5cff);
+    --bg: #f0f2f5;
+    --card: rgba(255,255,255,0.7);
+    --text: #202124;
+    --glass: blur(10px);
+}
 
-        .hint-box { background: var(--warning); color: #856404; padding: 15px; border-radius: 14px; margin-bottom: 15px; border-left: 5px solid #fbc02d; font-size: 0.9em; animation: fadeIn 0.3s; text-align: left; }
-        .risk-box { background: var(--risk); color: #e65100; padding: 15px; border-radius: 14px; margin-bottom: 15px; border-left: 5px solid #ff9800; font-size: 0.9em; animation: fadeIn 0.3s; text-align: left; }
-        .status-badge { background: var(--info); color: #1967d2; padding: 8px; border-radius: 15px; font-size: 0.85em; font-weight: bold; text-align: center; margin-bottom: 15px; }
-        .nav-ui { display: none; text-align: center; animation: fadeIn 0.3s; flex-grow: 1; }
-        .next-btn { background: var(--success); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; transition: 0.2s; }
-        .next-btn:active { transform: scale(0.98); opacity: 0.9; }
+/* พื้นหลัง */
+body {
+    font-family: 'Chakra Petch', sans-serif;
+    background: linear-gradient(135deg, #dfe9f3, #ffffff);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
 
-        .ad-section { margin-top: 20px; padding-top: 15px; border-top: 2px dashed #eee; text-align: center; }
-        .ad-card { background: #fffafa; border: 1.5px solid #ffebef; border-radius: 20px; padding: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .ad-title { font-weight: bold; color: #d93025; display: block; margin-bottom: 10px; font-size: 1.1em; }
-        .ad-item { font-size: 0.95em; margin: 6px 0; color: #333; }
-        .ad-sub-text { font-size: 0.85em; color: #666; font-style: italic; margin-bottom: 10px; display: block; }
-        .fb-link { display: inline-flex; align-items: center; background: var(--fb); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
-        .fb-link i { margin-right: 8px; font-size: 1.2em; }
+/* กล่องหลัก */
+.container {
+    max-width: 420px;
+    width: 100%;
+    padding: 25px;
+    border-radius: 25px;
+    backdrop-filter: var(--glass);
+    background: var(--card);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease;
+}
 
-        .reset-link { display: block; text-align: center; margin: 15px 0; color: #70757a; text-decoration: none; font-size: 0.8em; cursor: pointer; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+/* ปุ่ม */
+.choice-btn {
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.choice-btn:hover {
+    background: linear-gradient(135deg, #e3f2fd, #e8eaf6);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.choice-btn:active {
+    transform: scale(0.95);
+}
+
+/* ปุ่มหลัก */
+.next-btn {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.next-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* Badge */
+.status-badge {
+    background: rgba(26,115,232,0.1);
+    padding: 8px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hint animation */
+.hint-box, .risk-box {
+    animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+        #cur-stage-name {
+    transition: 0.3s;
+    color: #1a73e8;
+    text-shadow: 0 0 10px rgba(26,115,232,0.3);
+}
+</style>
 </head>
 <body>
 
@@ -76,6 +144,14 @@
 </div>
 
 <script>
+const clickSound = new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+
+document.addEventListener("click", () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+});
+
+    
 const patterns = {
     1: ["การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก", "วงล้อคลั่งไคล้"],
     2: ["การผจญภัยเล็ก", "การผจญภัยเล็ก", "ขวานบินสะท้อน", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "วงล้อคลั่งไคล้", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก"],
@@ -149,7 +225,11 @@ function renderNav() {
     // อัปเดต UI ปกติ
     status.innerText = `Sequence ${selectedSequence}`;
     label.innerText = `Move ${currentPos}`;
+    stageName.style.opacity = 0;
+setTimeout(() => {
     stageName.innerText = currentPattern[currentPos-1];
+    stageName.style.opacity = 1;
+}, 150);
     
     btn.innerText = "บันทึกและไปต่อ →";
     btn.onclick = nextMove;
