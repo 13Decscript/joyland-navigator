@@ -8,85 +8,121 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-:root {
-    --primary: linear-gradient(135deg,#1a73e8,#6a5cff);
-    --bg: linear-gradient(135deg,#dfe9f3,#ffffff);
+:root{
+ --primary:linear-gradient(135deg,#1a73e8,#6a5cff);
+ --bg:linear-gradient(135deg,#eef2f7,#ffffff);
+ --card:rgba(255,255,255,0.75);
+ --success:#34a853;
 }
 
-body {
-    font-family: 'Chakra Petch', sans-serif;
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+body{
+ font-family:'Chakra Petch',sans-serif;
+ background:var(--bg);
+ margin:0;
+ display:flex;
+ justify-content:center;
+ padding:20px;
 }
 
-.container {
-    max-width: 420px;
-    width: 100%;
-    padding: 25px;
-    border-radius: 25px;
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-    animation: fadeIn .5s;
+.container{
+ width:100%;
+ max-width:420px;
+ background:var(--card);
+ backdrop-filter:blur(12px);
+ border-radius:25px;
+ padding:25px;
+ box-shadow:0 15px 40px rgba(0,0,0,0.12);
+ animation:fadeIn .5s;
 }
 
-h2 { text-align:center; }
+h2{text-align:center;margin-bottom:15px;}
 
-.btn-grid {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
+.step-indicator{
+ display:flex;
+ gap:5px;
+ margin-bottom:15px;
+}
+.step{
+ flex:1;height:6px;border-radius:5px;background:#ddd;
+}
+.step.active{background:#1a73e8;}
+
+.btn-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
 }
 
-.choice-btn {
-    padding:14px;
-    border-radius:12px;
-    border:none;
-    background:white;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
+.choice-btn{
+ padding:14px;
+ border:none;
+ border-radius:12px;
+ background:#fff;
+ font-weight:bold;
+ cursor:pointer;
+ transition:.2s;
+}
+.choice-btn:hover{
+ transform:translateY(-2px);
+ box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-.choice-btn:hover {
-    transform:translateY(-2px);
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+.nav-ui{display:none;text-align:center;}
+
+.status-badge{
+ background:#e3f2fd;
+ padding:8px;
+ border-radius:20px;
+ margin-bottom:10px;
+ font-weight:bold;
 }
 
-.next-btn {
-    background: var(--primary);
-    color:white;
-    border:none;
-    padding:15px;
-    border-radius:14px;
-    width:100%;
-    font-weight:bold;
-    cursor:pointer;
+#cur-stage-name{
+ font-size:1.4em;
+ font-weight:bold;
+ color:#1a73e8;
+ text-shadow:0 0 10px rgba(26,115,232,0.3);
+ transition:.3s;
 }
 
-.status-badge {
-    background:#e3f2fd;
-    padding:8px;
-    border-radius:20px;
-    text-align:center;
-    margin-bottom:10px;
+.next-btn{
+ margin-top:10px;
+ width:100%;
+ padding:15px;
+ border:none;
+ border-radius:14px;
+ background:var(--primary);
+ color:white;
+ font-size:1.1em;
+ font-weight:bold;
+ cursor:pointer;
 }
 
-#cur-stage-name {
-    font-size:1.4em;
-    font-weight:bold;
-    color:#1a73e8;
-    text-shadow:0 0 10px rgba(26,115,232,0.3);
-    transition:.3s;
+.hint-box,.risk-box{
+ padding:12px;
+ border-radius:12px;
+ margin-bottom:10px;
+ text-align:left;
+ animation:pop .3s;
+}
+.hint-box{background:#fff9c4;}
+.risk-box{background:#ffe0b2;}
+
+.reset-link{
+ display:block;
+ margin-top:10px;
+ font-size:.85em;
+ cursor:pointer;
+ color:#666;
 }
 
-.nav-ui { display:none; }
-
-@keyframes fadeIn {
-    from {opacity:0; transform:translateY(10px);}
-    to {opacity:1;}
+@keyframes fadeIn{
+ from{opacity:0;transform:translateY(10px);}
+ to{opacity:1;}
+}
+@keyframes pop{
+ from{opacity:0;transform:scale(.9);}
+ to{opacity:1;}
 }
 </style>
 </head>
@@ -96,71 +132,151 @@ h2 { text-align:center; }
 <div class="container">
 
 <div id="finder-section">
-<h2>ค้นหาตำแหน่ง</h2>
+<h2>ค้นหาตำแหน่ง (4 Step)</h2>
+<div class="step-indicator">
+<div id="s1" class="step active"></div>
+<div id="s2" class="step"></div>
+<div id="s3" class="step"></div>
+<div id="s4" class="step"></div>
+</div>
 <div id="finder-btns" class="btn-grid"></div>
 </div>
 
 <div id="nav-section" class="nav-ui">
 <div id="status-bar" class="status-badge"></div>
+<div id="hint-container"></div>
+
+<div style="margin:15px 0;">
 <div id="cur-move-label"></div>
 <div id="cur-stage-name"></div>
-<button class="next-btn" onclick="nextMove()">ไปต่อ →</button>
+</div>
+
+<button id="main-action-btn" class="next-btn">ไปต่อ →</button>
+<a class="reset-link" onclick="resetApp()">🔄 เริ่มใหม่</a>
 </div>
 
 </div>
 
 <script>
 
-const clickSound = new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+// 🔊 sound
+const clickSound=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+document.addEventListener("click",()=>{clickSound.currentTime=0;clickSound.play();});
 
-document.addEventListener("click", () => {
-    clickSound.currentTime = 0;
-    clickSound.play();
-});
-
-const patterns = {
-1:["การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","วงล้อคลั่งไคล้"]
+// 🔥 data
+const patterns={
+1:["การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","วงล้อคลั่งไคล้"],
+2:["การผจญภัยเล็ก","การผจญภัยเล็ก","ขวานบินสะท้อน","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","วงล้อคลั่งไคล้","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก"],
+3:["การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","การผจญภัยเล็ก","ขวานบินสะท้อน","การผจญภัยเล็ก","กางเขนชะตากรรม","วงล้อคลั่งไคล้","การผจญภัยเล็ก","การดวลบล็อก","กางเขนชะตากรรม"],
+4:["การผจญภัยเล็ก","การผจญภัยเล็ก","แดนลับแห่งการ์ด","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","ขวานบินสะท้อน","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","กางเขนชะตากรรม","ขวานบินสะท้อน","วงล้อคลั่งไคล้"]
 };
 
 const stages=["การผจญภัยเล็ก","กางเขนชะตากรรม","การดวลบล็อก","ขวานบินสะท้อน","แดนลับแห่งการ์ด","วงล้อคลั่งไคล้"];
 
-let currentPos=0;
+let findStep=1,selectedSequence=null,currentPos=0,inputs=[];
 
-function init(){
-const grid=document.getElementById("finder-btns");
-grid.innerHTML="";
+// init
+function initFinder(){
+findStep=1;inputs=[];
+document.getElementById('finder-section').style.display='block';
+document.getElementById('nav-section').style.display='none';
+
+for(let i=1;i<=4;i++){
+document.getElementById('s'+i).className=i===1?'step active':'step';
+}
+
+let grid=document.getElementById('finder-btns');
+grid.innerHTML='';
+
 stages.forEach(s=>{
-let b=document.createElement("button");
-b.className="choice-btn";
-b.innerText=s;
-b.onclick=()=>startNav();
-grid.appendChild(b);
+let btn=document.createElement('button');
+btn.className='choice-btn';
+btn.innerText=s;
+btn.onclick=()=>{
+inputs.push(s);
+if(findStep<4){
+findStep++;
+document.getElementById('s'+findStep).classList.add('active');
+}else{
+matchPosition();
+}
+};
+grid.appendChild(btn);
 });
 }
 
-function startNav(){
-document.getElementById("finder-section").style.display="none";
-document.getElementById("nav-section").style.display="block";
-render();
+// match
+function matchPosition(){
+let found=[];
+for(let sId in patterns){
+let p=patterns[sId];
+for(let i=0;i<=p.length-4;i++){
+if(p[i]===inputs[0]&&p[i+1]===inputs[1]&&p[i+2]===inputs[2]&&p[i+3]===inputs[3]){
+found.push({seq:sId,lastMove:i+4});
+}
+}
+}
+if(found.length===0){alert("ไม่พบรูปแบบ!");resetApp();}
+else{
+selectedSequence=found[0].seq;
+currentPos=found[0].lastMove;
+startNav();
+}
 }
 
-function render(){
-let stage=document.getElementById("cur-stage-name");
+// nav
+function startNav(){
+document.getElementById('finder-section').style.display='none';
+document.getElementById('nav-section').style.display='block';
+renderNav();
+}
+
+function renderNav(){
+let stage=document.getElementById('cur-stage-name');
+let label=document.getElementById('cur-move-label');
+let status=document.getElementById('status-bar');
+let hint=document.getElementById('hint-container');
+
+hint.innerHTML='';
+
+let pattern=patterns[selectedSequence];
+
+if(currentPos>pattern.length){
+stage.innerHTML="🏁 จบรอบ!";
+label.innerText="";
+return;
+}
+
+status.innerText="Sequence "+selectedSequence;
+label.innerText="Move "+currentPos;
+
+// animation
 stage.style.opacity=0;
 setTimeout(()=>{
-stage.innerText=patterns[1][currentPos];
+stage.innerText=pattern[currentPos-1];
 stage.style.opacity=1;
-},150);
-document.getElementById("cur-move-label").innerText="Move "+(currentPos+1);
+},120);
+
+// hint
+if(currentPos<pattern.length){
+let next=pattern[currentPos];
+if(next==="ขวานบินสะท้อน") addHint(next,"เตรียมเหรียญ x50","hint");
+if(next==="แดนลับแห่งการ์ด") addHint(next,"เตรียมทอง x50","hint");
+if(next==="วงล้อคลั่งไคล้") addHint(next,"เสี่ยงได้ แต่ไม่แนะนำ","risk");
+}
 }
 
-function nextMove(){
-currentPos++;
-if(currentPos>=patterns[1].length){currentPos=0;}
-render();
+function addHint(name,msg,type){
+let div=document.createElement('div');
+div.className=type==="risk"?"risk-box":"hint-box";
+div.innerHTML="<b>🎯 มูฟหน้า: "+name+"</b><br>"+msg;
+document.getElementById('hint-container').appendChild(div);
 }
 
-init();
+function nextMove(){currentPos++;renderNav();}
+function resetApp(){initFinder();}
+
+initFinder();
 
 </script>
 
