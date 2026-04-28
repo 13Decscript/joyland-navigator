@@ -1,149 +1,116 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyland Navigator - Fixed Edition</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joyland Navigator PRO</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
 :root {
-    --primary: linear-gradient(135deg, #1a73e8, #6a5cff);
-    --bg: #f0f2f5;
-    --card: rgba(255,255,255,0.7);
-    --text: #202124;
-    --glass: blur(10px);
+    --primary: linear-gradient(135deg,#1a73e8,#6a5cff);
+    --bg: linear-gradient(135deg,#dfe9f3,#ffffff);
 }
 
-/* พื้นหลัง */
 body {
     font-family: 'Chakra Petch', sans-serif;
-    background: linear-gradient(135deg, #dfe9f3, #ffffff);
-    color: var(--text);
+    background: var(--bg);
     display: flex;
     justify-content: center;
     padding: 20px;
 }
 
-/* กล่องหลัก */
 .container {
     max-width: 420px;
     width: 100%;
     padding: 25px;
     border-radius: 25px;
-    backdrop-filter: var(--glass);
-    background: var(--card);
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px);
     box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-    animation: fadeIn 0.5s ease;
+    animation: fadeIn .5s;
 }
 
-/* ปุ่ม */
+h2 { text-align:center; }
+
+.btn-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
 .choice-btn {
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    background: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    background:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
 }
 
 .choice-btn:hover {
-    background: linear-gradient(135deg, #e3f2fd, #e8eaf6);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-.choice-btn:active {
-    transform: scale(0.95);
-}
-
-/* ปุ่มหลัก */
 .next-btn {
     background: var(--primary);
-    border: none;
-    color: white;
-    padding: 16px;
-    border-radius: 14px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.25s;
+    color:white;
+    border:none;
+    padding:15px;
+    border-radius:14px;
+    width:100%;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.next-btn:hover {
-    filter: brightness(1.1);
-    transform: translateY(-2px);
-}
-
-/* Badge */
 .status-badge {
-    background: rgba(26,115,232,0.1);
-    padding: 8px;
-    border-radius: 20px;
-    font-weight: bold;
+    background:#e3f2fd;
+    padding:8px;
+    border-radius:20px;
+    text-align:center;
+    margin-bottom:10px;
 }
 
-/* Animation */
+#cur-stage-name {
+    font-size:1.4em;
+    font-weight:bold;
+    color:#1a73e8;
+    text-shadow:0 0 10px rgba(26,115,232,0.3);
+    transition:.3s;
+}
+
+.nav-ui { display:none; }
+
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Hint animation */
-.hint-box, .risk-box {
-    animation: popIn 0.3s ease;
-}
-
-@keyframes popIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-        #cur-stage-name {
-    transition: 0.3s;
-    color: #1a73e8;
-    text-shadow: 0 0 10px rgba(26,115,232,0.3);
+    from {opacity:0; transform:translateY(10px);}
+    to {opacity:1;}
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
-    <div id="finder-section">
-        <h2>ค้นหาตำแหน่ง (4 Step)</h2>
-        <div class="step-indicator">
-            <div id="s1" class="step active"></div>
-            <div id="s2" class="step"></div>
-            <div id="s3" class="step"></div>
-            <div id="s4" class="step"></div>
-        </div>
-        <div id="finder-btns" class="btn-grid"></div>
-    </div>
 
-    <div id="nav-section" class="nav-ui">
-        <div id="status-bar" class="status-badge"></div>
-        <div id="hint-container"></div>
-        <div style="margin: 20px 0;">
-            <div id="cur-move-label" style="color: #5f6368; font-size: 0.85em;"></div>
-            <div id="cur-stage-name" style="font-size: 1.4em; font-weight: bold; margin-top: 5px;"></div>
-        </div>
-        <button id="main-action-btn" class="next-btn">บันทึกและไปต่อ →</button>
-        <a class="reset-link" onclick="resetApp()">🔄 เริ่มใหม่</a>
-    </div>
+<div id="finder-section">
+<h2>ค้นหาตำแหน่ง</h2>
+<div id="finder-btns" class="btn-grid"></div>
+</div>
 
-    <!--div class="ad-section">
-        <div class="ad-card">
-            <span class="ad-title"><i class="fas fa-star"></i> บริการพิเศษ</span>
-            <div class="ad-item">🔴 <b>ขายกล่องแดง:</b> กล่องละ 10 บาท</div>
-            <div class="ad-item">🔑 <b>รับเปิดกล่องแดง:</b> 1 กุญแจ 4 บาท</div>
-            <span class="ad-sub-text">(มีบริการบันทึกวิดีโอขณะเปิดให้ชม)</span>
-            <a href="https://www.facebook.com/share/17w3jgHXM1/" target="_blank" class="fb-link">
-                <i class="fab fa-facebook"></i> Facebook ติดต่อเรา
-            </a>
-        </div>
-</div-->
+<div id="nav-section" class="nav-ui">
+<div id="status-bar" class="status-badge"></div>
+<div id="cur-move-label"></div>
+<div id="cur-stage-name"></div>
+<button class="next-btn" onclick="nextMove()">ไปต่อ →</button>
+</div>
+
 </div>
 
 <script>
+
 const clickSound = new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
 
 document.addEventListener("click", () => {
@@ -151,110 +118,51 @@ document.addEventListener("click", () => {
     clickSound.play();
 });
 
-    
 const patterns = {
-    1: ["การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก", "วงล้อคลั่งไคล้"],
-    2: ["การผจญภัยเล็ก", "การผจญภัยเล็ก", "ขวานบินสะท้อน", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "วงล้อคลั่งไคล้", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก"],
-    3: ["การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "ขวานบินสะท้อน", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "วงล้อคลั่งไคล้", "การผจญภัยเล็ก", "การดวลบล็อก", "กางเขนชะตากรรม"],
-    4: ["การผจญภัยเล็ก", "การผจญภัยเล็ก", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "ขวานบินสะท้อน", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "ขวานบินสะท้อน", "วงล้อคลั่งไคล้"]
+1:["การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","วงล้อคลั่งไคล้"]
 };
 
-const stages = ["การผจญภัยเล็ก", "กางเขนชะตากรรม", "การดวลบล็อก", "ขวานบินสะท้อน", "แดนลับแห่งการ์ด", "วงล้อคลั่งไคล้"];
-let findStep = 1, selectedSequence = null, currentPos = 0, inputs = [];
+const stages=["การผจญภัยเล็ก","กางเขนชะตากรรม","การดวลบล็อก","ขวานบินสะท้อน","แดนลับแห่งการ์ด","วงล้อคลั่งไคล้"];
 
-function initFinder() {
-    findStep = 1; inputs = [];
-    document.getElementById('finder-section').style.display = 'block';
-    document.getElementById('nav-section').style.display = 'none';
-    for(let i=1; i<=4; i++) document.getElementById(`s${i}`).className = i===1 ? 'step active' : 'step';
-    const grid = document.getElementById('finder-btns');
-    grid.innerHTML = '';
-    stages.forEach(s => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.innerText = s;
-        btn.onclick = () => {
-            inputs.push(s);
-            if (findStep < 4) { findStep++; document.getElementById(`s${findStep}`).classList.add('active'); } 
-            else { matchPosition(); }
-        };
-        grid.appendChild(btn);
-    });
+let currentPos=0;
+
+function init(){
+const grid=document.getElementById("finder-btns");
+grid.innerHTML="";
+stages.forEach(s=>{
+let b=document.createElement("button");
+b.className="choice-btn";
+b.innerText=s;
+b.onclick=()=>startNav();
+grid.appendChild(b);
+});
 }
 
-function matchPosition() {
-    let found = [];
-    for (let sId in patterns) {
-        let p = patterns[sId];
-        for (let i = 0; i <= p.length - 4; i++) {
-            if (p[i] === inputs[0] && p[i+1] === inputs[1] && p[i+2] === inputs[2] && p[i+3] === inputs[3]) {
-                found.push({ seq: sId, lastMove: i + 4 });
-            }
-        }
-    }
-    if (found.length === 0) { alert("ไม่พบรูปแบบนี้!"); resetApp(); }
-    else { selectedSequence = found[0].seq; currentPos = found[0].lastMove; startNav(); }
+function startNav(){
+document.getElementById("finder-section").style.display="none";
+document.getElementById("nav-section").style.display="block";
+render();
 }
 
-function startNav() {
-    document.getElementById('finder-section').style.display = 'none';
-    document.getElementById('nav-section').style.display = 'block';
-    renderNav();
+function render(){
+let stage=document.getElementById("cur-stage-name");
+stage.style.opacity=0;
+setTimeout(()=>{
+stage.innerText=patterns[1][currentPos];
+stage.style.opacity=1;
+},150);
+document.getElementById("cur-move-label").innerText="Move "+(currentPos+1);
 }
 
-function renderNav() {
-    const status = document.getElementById('status-bar'), label = document.getElementById('cur-move-label');
-    const stageName = document.getElementById('cur-stage-name'), hintContainer = document.getElementById('hint-container');
-    const btn = document.getElementById('main-action-btn');
-    hintContainer.innerHTML = '';
-    
-    // ดึงอาเรย์ด่านของ Sequence ที่เลือก
-    const currentPattern = patterns[selectedSequence];
-
-    // กรณีจบด่านที่ 13 (Move เกินจำนวนด่านที่มี)
-    if (currentPos > currentPattern.length) {
-        stageName.innerHTML = "🏁 จบรอบที่ 13 แล้ว!";
-        label.innerText = "";
-        btn.innerText = "เริ่มรอบใหม่"; 
-        btn.onclick = resetApp;
-        btn.style.backgroundColor = "var(--success)";
-        setTimeout(resetApp, 4000); 
-        return;
-    }
-
-    // อัปเดต UI ปกติ
-    status.innerText = `Sequence ${selectedSequence}`;
-    label.innerText = `Move ${currentPos}`;
-    stageName.style.opacity = 0;
-setTimeout(() => {
-    stageName.innerText = currentPattern[currentPos-1];
-    stageName.style.opacity = 1;
-}, 150);
-    
-    btn.innerText = "บันทึกและไปต่อ →";
-    btn.onclick = nextMove;
-    btn.style.backgroundColor = "var(--success)";
-
-    // ระบบ Look Ahead (มองด่านถัดไป)
-    if (currentPos < currentPattern.length) {
-        let nextStage = currentPattern[currentPos];
-        if (nextStage === "ขวานบินสะท้อน") addHint(nextStage, "เหรียญรื่นเริง (เตรียม x50!)", "hint");
-        else if (nextStage === "แดนลับแห่งการ์ด") addHint(nextStage, "เก็บทอง (เตรียม x50!)", "hint");
-        else if (nextStage === "วงล้อคลั่งไคล้") addHint(nextStage, "จะเสี่ยง x50 ก็ได้นะ แต่ไม่แนะนำ", "risk");
-    }
+function nextMove(){
+currentPos++;
+if(currentPos>=patterns[1].length){currentPos=0;}
+render();
 }
 
-function addHint(name, msg, type) {
-    const container = document.getElementById('hint-container');
-    const div = document.createElement('div');
-    div.className = type === "risk" ? "risk-box" : "hint-box";
-    div.innerHTML = `<b>🎯 มูฟหน้า: ${name}</b><br>${msg}`;
-    container.appendChild(div);
-}
+init();
 
-function nextMove() { currentPos++; renderNav(); }
-function resetApp() { initFinder(); }
-initFinder();
 </script>
+
 </body>
 </html>
