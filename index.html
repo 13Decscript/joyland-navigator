@@ -1,284 +1,180 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Joyland Navigator PRO</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyland Navigator - Fixed Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #1a73e8; --bg: #f8f9fa; --card: #ffffff; --text: #202124; --info: #e8f0fe; --success: #34a853; --warning: #fff9c4; --risk: #fff3e0; --fb: #1877F2; }
+        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 400px; background: var(--card); padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; flex-direction: column; min-height: 90vh; }
+        
+        h2 { text-align: center; color: var(--primary); margin-bottom: 20px; font-size: 1.4em; }
+        .step-indicator { display: flex; justify-content: space-between; margin-bottom: 20px; gap: 5px; }
+        .step { flex: 1; height: 6px; background: #e0e0e0; border-radius: 3px; }
+        .step.active { background: var(--primary); }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .choice-btn { padding: 14px; border: 2px solid #dadce0; border-radius: 12px; background: white; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .choice-btn:active { background: var(--info); transform: scale(0.98); }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        .hint-box { background: var(--warning); color: #856404; padding: 15px; border-radius: 14px; margin-bottom: 15px; border-left: 5px solid #fbc02d; font-size: 0.9em; animation: fadeIn 0.3s; text-align: left; }
+        .risk-box { background: var(--risk); color: #e65100; padding: 15px; border-radius: 14px; margin-bottom: 15px; border-left: 5px solid #ff9800; font-size: 0.9em; animation: fadeIn 0.3s; text-align: left; }
+        .status-badge { background: var(--info); color: #1967d2; padding: 8px; border-radius: 15px; font-size: 0.85em; font-weight: bold; text-align: center; margin-bottom: 15px; }
+        .nav-ui { display: none; text-align: center; animation: fadeIn 0.3s; flex-grow: 1; }
+        .next-btn { background: var(--success); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; transition: 0.2s; }
+        .next-btn:active { transform: scale(0.98); opacity: 0.9; }
 
-<style>
-:root{
- --primary:linear-gradient(135deg,#1a73e8,#6a5cff);
- --bg:linear-gradient(135deg,#eef2f7,#ffffff);
- --card:rgba(255,255,255,0.75);
- --success:#34a853;
-}
+        .ad-section { margin-top: 20px; padding-top: 15px; border-top: 2px dashed #eee; text-align: center; }
+        .ad-card { background: #fffafa; border: 1.5px solid #ffebef; border-radius: 20px; padding: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .ad-title { font-weight: bold; color: #d93025; display: block; margin-bottom: 10px; font-size: 1.1em; }
+        .ad-item { font-size: 0.95em; margin: 6px 0; color: #333; }
+        .ad-sub-text { font-size: 0.85em; color: #666; font-style: italic; margin-bottom: 10px; display: block; }
+        .fb-link { display: inline-flex; align-items: center; background: var(--fb); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
+        .fb-link i { margin-right: 8px; font-size: 1.2em; }
 
-body{
- font-family:'Chakra Petch',sans-serif;
- background:var(--bg);
- margin:0;
- display:flex;
- justify-content:center;
- padding:20px;
-}
-
-.container{
- width:100%;
- max-width:420px;
- background:var(--card);
- backdrop-filter:blur(12px);
- border-radius:25px;
- padding:25px;
- box-shadow:0 15px 40px rgba(0,0,0,0.12);
- animation:fadeIn .5s;
-}
-
-h2{text-align:center;margin-bottom:15px;}
-
-.step-indicator{
- display:flex;
- gap:5px;
- margin-bottom:15px;
-}
-.step{
- flex:1;height:6px;border-radius:5px;background:#ddd;
-}
-.step.active{background:#1a73e8;}
-
-.btn-grid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
-}
-
-.choice-btn{
- padding:14px;
- border:none;
- border-radius:12px;
- background:#fff;
- font-weight:bold;
- cursor:pointer;
- transition:.2s;
-}
-.choice-btn:hover{
- transform:translateY(-2px);
- box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-.nav-ui{display:none;text-align:center;}
-
-.status-badge{
- background:#e3f2fd;
- padding:8px;
- border-radius:20px;
- margin-bottom:10px;
- font-weight:bold;
-}
-
-#cur-stage-name{
- font-size:1.4em;
- font-weight:bold;
- color:#1a73e8;
- text-shadow:0 0 10px rgba(26,115,232,0.3);
- transition:.3s;
-}
-
-.next-btn{
- margin-top:10px;
- width:100%;
- padding:15px;
- border:none;
- border-radius:14px;
- background:var(--primary);
- color:white;
- font-size:1.1em;
- font-weight:bold;
- cursor:pointer;
-}
-
-.hint-box,.risk-box{
- padding:12px;
- border-radius:12px;
- margin-bottom:10px;
- text-align:left;
- animation:pop .3s;
-}
-.hint-box{background:#fff9c4;}
-.risk-box{background:#ffe0b2;}
-
-.reset-link{
- display:block;
- margin-top:10px;
- font-size:.85em;
- cursor:pointer;
- color:#666;
-}
-
-@keyframes fadeIn{
- from{opacity:0;transform:translateY(10px);}
- to{opacity:1;}
-}
-@keyframes pop{
- from{opacity:0;transform:scale(.9);}
- to{opacity:1;}
-}
-</style>
+        .reset-link { display: block; text-align: center; margin: 15px 0; color: #70757a; text-decoration: none; font-size: 0.8em; cursor: pointer; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-
 <body>
 
 <div class="container">
+    <div id="finder-section">
+        <h2>ค้นหาตำแหน่ง (4 Step)</h2>
+        <div class="step-indicator">
+            <div id="s1" class="step active"></div>
+            <div id="s2" class="step"></div>
+            <div id="s3" class="step"></div>
+            <div id="s4" class="step"></div>
+        </div>
+        <div id="finder-btns" class="btn-grid"></div>
+    </div>
 
-<div id="finder-section">
-<h2>ค้นหาตำแหน่ง (4 Step)</h2>
-<div class="step-indicator">
-<div id="s1" class="step active"></div>
-<div id="s2" class="step"></div>
-<div id="s3" class="step"></div>
-<div id="s4" class="step"></div>
-</div>
-<div id="finder-btns" class="btn-grid"></div>
-</div>
+    <div id="nav-section" class="nav-ui">
+        <div id="status-bar" class="status-badge"></div>
+        <div id="hint-container"></div>
+        <div style="margin: 20px 0;">
+            <div id="cur-move-label" style="color: #5f6368; font-size: 0.85em;"></div>
+            <div id="cur-stage-name" style="font-size: 1.4em; font-weight: bold; margin-top: 5px;"></div>
+        </div>
+        <button id="main-action-btn" class="next-btn">บันทึกและไปต่อ →</button>
+        <a class="reset-link" onclick="resetApp()">🔄 เริ่มใหม่</a>
+    </div>
 
-<div id="nav-section" class="nav-ui">
-<div id="status-bar" class="status-badge"></div>
-<div id="hint-container"></div>
-
-<div style="margin:15px 0;">
-<div id="cur-move-label"></div>
-<div id="cur-stage-name"></div>
-</div>
-
-<button id="main-action-btn" class="next-btn">ไปต่อ →</button>
-<a class="reset-link" onclick="resetApp()">🔄 เริ่มใหม่</a>
-</div>
-
+    <!--div class="ad-section">
+        <div class="ad-card">
+            <span class="ad-title"><i class="fas fa-star"></i> บริการพิเศษ</span>
+            <div class="ad-item">🔴 <b>ขายกล่องแดง:</b> กล่องละ 10 บาท</div>
+            <div class="ad-item">🔑 <b>รับเปิดกล่องแดง:</b> 1 กุญแจ 4 บาท</div>
+            <span class="ad-sub-text">(มีบริการบันทึกวิดีโอขณะเปิดให้ชม)</span>
+            <a href="https://www.facebook.com/share/17w3jgHXM1/" target="_blank" class="fb-link">
+                <i class="fab fa-facebook"></i> Facebook ติดต่อเรา
+            </a>
+        </div>
+</div-->
 </div>
 
 <script>
-
-// 🔊 sound
-const clickSound=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
-document.addEventListener("click",()=>{clickSound.currentTime=0;clickSound.play();});
-
-// 🔥 data
-const patterns={
-1:["การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก","วงล้อคลั่งไคล้"],
-2:["การผจญภัยเล็ก","การผจญภัยเล็ก","ขวานบินสะท้อน","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","วงล้อคลั่งไคล้","กางเขนชะตากรรม","การผจญภัยเล็ก","การดวลบล็อก"],
-3:["การผจญภัยเล็ก","การผจญภัยเล็ก","กางเขนชะตากรรม","แดนลับแห่งการ์ด","การผจญภัยเล็ก","การผจญภัยเล็ก","ขวานบินสะท้อน","การผจญภัยเล็ก","กางเขนชะตากรรม","วงล้อคลั่งไคล้","การผจญภัยเล็ก","การดวลบล็อก","กางเขนชะตากรรม"],
-4:["การผจญภัยเล็ก","การผจญภัยเล็ก","แดนลับแห่งการ์ด","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","ขวานบินสะท้อน","การผจญภัยเล็ก","กางเขนชะตากรรม","การผจญภัยเล็ก","กางเขนชะตากรรม","ขวานบินสะท้อน","วงล้อคลั่งไคล้"]
+const patterns = {
+    1: ["การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก", "วงล้อคลั่งไคล้"],
+    2: ["การผจญภัยเล็ก", "การผจญภัยเล็ก", "ขวานบินสะท้อน", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "วงล้อคลั่งไคล้", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "การดวลบล็อก"],
+    3: ["การผจญภัยเล็ก", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "การผจญภัยเล็ก", "ขวานบินสะท้อน", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "วงล้อคลั่งไคล้", "การผจญภัยเล็ก", "การดวลบล็อก", "กางเขนชะตากรรม"],
+    4: ["การผจญภัยเล็ก", "การผจญภัยเล็ก", "แดนลับแห่งการ์ด", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "ขวานบินสะท้อน", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "การผจญภัยเล็ก", "กางเขนชะตากรรม", "ขวานบินสะท้อน", "วงล้อคลั่งไคล้"]
 };
 
-const stages=["การผจญภัยเล็ก","กางเขนชะตากรรม","การดวลบล็อก","ขวานบินสะท้อน","แดนลับแห่งการ์ด","วงล้อคลั่งไคล้"];
+const stages = ["การผจญภัยเล็ก", "กางเขนชะตากรรม", "การดวลบล็อก", "ขวานบินสะท้อน", "แดนลับแห่งการ์ด", "วงล้อคลั่งไคล้"];
+let findStep = 1, selectedSequence = null, currentPos = 0, inputs = [];
 
-let findStep=1,selectedSequence=null,currentPos=0,inputs=[];
-
-// init
-function initFinder(){
-findStep=1;inputs=[];
-document.getElementById('finder-section').style.display='block';
-document.getElementById('nav-section').style.display='none';
-
-for(let i=1;i<=4;i++){
-document.getElementById('s'+i).className=i===1?'step active':'step';
+function initFinder() {
+    findStep = 1; inputs = [];
+    document.getElementById('finder-section').style.display = 'block';
+    document.getElementById('nav-section').style.display = 'none';
+    for(let i=1; i<=4; i++) document.getElementById(`s${i}`).className = i===1 ? 'step active' : 'step';
+    const grid = document.getElementById('finder-btns');
+    grid.innerHTML = '';
+    stages.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = s;
+        btn.onclick = () => {
+            inputs.push(s);
+            if (findStep < 4) { findStep++; document.getElementById(`s${findStep}`).classList.add('active'); } 
+            else { matchPosition(); }
+        };
+        grid.appendChild(btn);
+    });
 }
 
-let grid=document.getElementById('finder-btns');
-grid.innerHTML='';
-
-stages.forEach(s=>{
-let btn=document.createElement('button');
-btn.className='choice-btn';
-btn.innerText=s;
-btn.onclick=()=>{
-inputs.push(s);
-if(findStep<4){
-findStep++;
-document.getElementById('s'+findStep).classList.add('active');
-}else{
-matchPosition();
-}
-};
-grid.appendChild(btn);
-});
+function matchPosition() {
+    let found = [];
+    for (let sId in patterns) {
+        let p = patterns[sId];
+        for (let i = 0; i <= p.length - 4; i++) {
+            if (p[i] === inputs[0] && p[i+1] === inputs[1] && p[i+2] === inputs[2] && p[i+3] === inputs[3]) {
+                found.push({ seq: sId, lastMove: i + 4 });
+            }
+        }
+    }
+    if (found.length === 0) { alert("ไม่พบรูปแบบนี้!"); resetApp(); }
+    else { selectedSequence = found[0].seq; currentPos = found[0].lastMove; startNav(); }
 }
 
-// match
-function matchPosition(){
-let found=[];
-for(let sId in patterns){
-let p=patterns[sId];
-for(let i=0;i<=p.length-4;i++){
-if(p[i]===inputs[0]&&p[i+1]===inputs[1]&&p[i+2]===inputs[2]&&p[i+3]===inputs[3]){
-found.push({seq:sId,lastMove:i+4});
-}
-}
-}
-if(found.length===0){alert("ไม่พบรูปแบบ!");resetApp();}
-else{
-selectedSequence=found[0].seq;
-currentPos=found[0].lastMove;
-startNav();
-}
+function startNav() {
+    document.getElementById('finder-section').style.display = 'none';
+    document.getElementById('nav-section').style.display = 'block';
+    renderNav();
 }
 
-// nav
-function startNav(){
-document.getElementById('finder-section').style.display='none';
-document.getElementById('nav-section').style.display='block';
-renderNav();
+function renderNav() {
+    const status = document.getElementById('status-bar'), label = document.getElementById('cur-move-label');
+    const stageName = document.getElementById('cur-stage-name'), hintContainer = document.getElementById('hint-container');
+    const btn = document.getElementById('main-action-btn');
+    hintContainer.innerHTML = '';
+    
+    // ดึงอาเรย์ด่านของ Sequence ที่เลือก
+    const currentPattern = patterns[selectedSequence];
+
+    // กรณีจบด่านที่ 13 (Move เกินจำนวนด่านที่มี)
+    if (currentPos > currentPattern.length) {
+        stageName.innerHTML = "🏁 จบรอบที่ 13 แล้ว!";
+        label.innerText = "";
+        btn.innerText = "เริ่มรอบใหม่"; 
+        btn.onclick = resetApp;
+        btn.style.backgroundColor = "var(--success)";
+        setTimeout(resetApp, 4000); 
+        return;
+    }
+
+    // อัปเดต UI ปกติ
+    status.innerText = `Sequence ${selectedSequence}`;
+    label.innerText = `Move ${currentPos}`;
+    stageName.innerText = currentPattern[currentPos-1];
+    
+    btn.innerText = "บันทึกและไปต่อ →";
+    btn.onclick = nextMove;
+    btn.style.backgroundColor = "var(--success)";
+
+    // ระบบ Look Ahead (มองด่านถัดไป)
+    if (currentPos < currentPattern.length) {
+        let nextStage = currentPattern[currentPos];
+        if (nextStage === "ขวานบินสะท้อน") addHint(nextStage, "เหรียญรื่นเริง (เตรียม x50!)", "hint");
+        else if (nextStage === "แดนลับแห่งการ์ด") addHint(nextStage, "เก็บทอง (เตรียม x50!)", "hint");
+        else if (nextStage === "วงล้อคลั่งไคล้") addHint(nextStage, "จะเสี่ยง x50 ก็ได้นะ แต่ไม่แนะนำ", "risk");
+    }
 }
 
-function renderNav(){
-let stage=document.getElementById('cur-stage-name');
-let label=document.getElementById('cur-move-label');
-let status=document.getElementById('status-bar');
-let hint=document.getElementById('hint-container');
-
-hint.innerHTML='';
-
-let pattern=patterns[selectedSequence];
-
-if(currentPos>pattern.length){
-stage.innerHTML="🏁 จบรอบ!";
-label.innerText="";
-return;
+function addHint(name, msg, type) {
+    const container = document.getElementById('hint-container');
+    const div = document.createElement('div');
+    div.className = type === "risk" ? "risk-box" : "hint-box";
+    div.innerHTML = `<b>🎯 มูฟหน้า: ${name}</b><br>${msg}`;
+    container.appendChild(div);
 }
 
-status.innerText="Sequence "+selectedSequence;
-label.innerText="Move "+currentPos;
-
-// animation
-stage.style.opacity=0;
-setTimeout(()=>{
-stage.innerText=pattern[currentPos-1];
-stage.style.opacity=1;
-},120);
-
-// hint
-if(currentPos<pattern.length){
-let next=pattern[currentPos];
-if(next==="ขวานบินสะท้อน") addHint(next,"เตรียมเหรียญ x50","hint");
-if(next==="แดนลับแห่งการ์ด") addHint(next,"เตรียมทอง x50","hint");
-if(next==="วงล้อคลั่งไคล้") addHint(next,"เสี่ยงได้ แต่ไม่แนะนำ","risk");
-}
-}
-
-function addHint(name,msg,type){
-let div=document.createElement('div');
-div.className=type==="risk"?"risk-box":"hint-box";
-div.innerHTML="<b>🎯 มูฟหน้า: "+name+"</b><br>"+msg;
-document.getElementById('hint-container').appendChild(div);
-}
-
-function nextMove(){currentPos++;renderNav();}
-function resetApp(){initFinder();}
-
+function nextMove() { currentPos++; renderNav(); }
+function resetApp() { initFinder(); }
 initFinder();
-
 </script>
-
 </body>
 </html>
